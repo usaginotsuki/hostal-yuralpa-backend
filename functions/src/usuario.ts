@@ -10,6 +10,8 @@ const subdb=db.collection(collection);
 
 
 
+
+
 interface Usuario{
     idusuario?:string,
     nombre:string,
@@ -37,16 +39,29 @@ function Usuario(id:string, data:any){
     return object;
 }
 
-routes.get('/usuarios',async(req,res)=>{
-    db.collection(collection).get()
+routes.get('/usuarios/page/:id',async(req,res)=>{
+
+    var page=parseInt(req.params.id);
+
+    var last= db.collection(collection)
+    .orderBy("nombre")
+    .limit(((page-1)*5)+1)
+    .get();
+
+    var start=(await last).docs[(await last).docs.length-1];
+
+
+    
+    db.collection(collection)
+    .orderBy("nombre")
+    .startAt(start.data().nombre)
+    .limit(5)
+    .get()
     .then(snapshot=>{
         res.status(200).json(snapshot.docs.map(doc=>Usuario(doc.id, doc.data())))
     })
     .catch(err=>res.status(400).json(main.Message('Un error ha ocurrido', `${err}`,'error')));
 
-/*    firebaseHelper.firestore.backup(db,collection)
-    .then(result=>res.status(200).send(result))
-    .catch(err=>res.status(400).send(`An error has ocurred ${err}`));*/
 });
 
 routes.post('/usuarios',async(req,res)=>{
