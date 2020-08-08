@@ -14,6 +14,7 @@ main.use(cors());
 main.use(bodyParser.json());
 main.use(bodyParser.urlencoded({extended:false}));
 main.use('/api',require('./usuario').routes);
+main.use('/api',require('./cuarto').routes);
 /*main.use('/api',require('./reservacion').routes);
 main.use('/api',require('./habitacion').routes);
 

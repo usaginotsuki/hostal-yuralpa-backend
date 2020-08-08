@@ -9,9 +9,6 @@ const subcollection="habitacion";
 const subdb=db.collection(collection);
 
 
-
-
-
 interface Usuario{
     idusuario?:string,
     nombre:string,
@@ -173,7 +170,7 @@ routes.patch('/usuarios/:id/habitacion/:id2',async(req,res)=>{
 
 routes.delete('/usuarios/:id/habitacion/:id2',async(req,res)=>{
     try{
-        let data=db.collection(req.params.id);
+        let data=subdb.doc(req.params.id);
         let id2=req.params.id2;
         await firebaseHelper.firestore.deleteDocument(data,subcollection,id2);
         res.status(200).send(`Habitacion con id ${id2} eliminado exitosamente`);
