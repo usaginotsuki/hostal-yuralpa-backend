@@ -1,4 +1,4 @@
-
+import {Habitacion} from './habitacion';
 
 export interface Servicio{
     idservicio?:string,
@@ -6,12 +6,12 @@ export interface Servicio{
     costo:string,
     fecha:Date,
     detalle:string,
-
-
+    habitacion?:Habitacion,
+    idhabitacion:string
 }
 
 export function Servicio(data:any, id?:string){
-    const {servicio, costo, fecha, detalle} = data;
+    const {servicio, costo, fecha, detalle, idhabitacion} = data;
 
     let object:Servicio={
         idservicio:id,
@@ -19,7 +19,7 @@ export function Servicio(data:any, id?:string){
         costo:costo,
         fecha:fecha,
         detalle:detalle,
-      
+        idhabitacion:idhabitacion
 
     }
     return object;

@@ -1,19 +1,22 @@
 /*============ Comida ============*/
 
+import {Habitacion} from './habitacion';
 export interface Comida{
     idcomida?:string,
-    idcliente?:string,
+
+    habitacion?:Habitacion,
     comida:string,
     costo:string,
     fecha:string,
     observaciones:string,
+    idhabitacion:string
 
 }
 
 
 export function Comida(data:any, id?:string){
 
-    const {comida, costo, fecha, observaciones}= data;
+    const {comida, costo, fecha, observaciones, idhabitacion}= data;
 
     let object:Comida={
         idcomida:id,
@@ -21,8 +24,7 @@ export function Comida(data:any, id?:string){
         costo:costo,
         fecha:fecha,
         observaciones:observaciones,
-
-
+        idhabitacion:idhabitacion
 
     }
     return object;

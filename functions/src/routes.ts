@@ -33,20 +33,20 @@ export function routesAcomm (app:Application){
 
 }
 export function routesService (app:Application){
-    app.post('/api/acomm/:id1/service', createService);
-    app.get('/api/acomm/:id1/service/:id', retrieveService);
-    app.put('/api/acomm/:id1/service/:id', updateService);
-    app.delete('/api/acomm/:id1/service/:id', deleteService);
-    app.get('/api/count/acomm/:id1/service', countService);
-    app.get('/api/page/acomm/:id1/service/:page/:limit', listService);
+    app.post('/api/acomm/service', createService);
+    app.get('/api/acomm/service/:id', retrieveService);
+    app.put('/api/acomm/service/:id', updateService);
+    app.delete('/api/acomm/service/:id', deleteService);
+    app.get('/api/count/acomm/service', countService);
+    app.get('/api/page/acomm/service/:page/:limit', listService);
 
 }
 export function routesMeal (app:Application){
-    app.post('/api/acomm/:id1/meal', createMeal);
-    app.get('/api/acomm/:id1/meal/:id', retrieveMeal);
-    app.put('/api/acomm/:id1/meal/:id', updateMeal);
-    app.delete('/api/acomm/:id1/meal/:id', deleteMeal);
-    app.get('/api/count/acomm/:id1/meal/:id', countMeal);
-    app.get('/api/page/acomm/:id1/meal/:page/:limit', listMeal);
+    app.post('/api/acomm/meal', createMeal);
+    app.get('/api/acomm/meal/:id', retrieveMeal);
+    app.put('/api/acomm/meal/:id', updateMeal);
+    app.delete('/api/acomm/meal/:id', deleteMeal);
+    app.get('/api/count/acomm/meal/:id', countMeal);
+    app.get('/api/page/acomm/meal/:page/:limit', listMeal);
 
 }
