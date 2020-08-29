@@ -1,0 +1,85 @@
+import {db} from '../index';
+import { Comida } from '../models/comida';
+import { Message } from "../models/message";
+import { Request, Response } from "express";
+
+const collection="habitacion";
+const subcollection="alimentacion";
+
+export async function createMeal(req:Request,res:Response){
+    try{
+
+        let id1 = (req.params.id1);
+        const newMeal = Comida(req.body);
+        const MealAdded = await db.collection(collection).doc(id1).collection(subcollection).add(newMeal);
+        return res.status(201).json(Message('Comida agregada', `Comida fue agregada con el id ${MealAdded.id}`, 'success'));
+    }
+    catch(err){
+        return handleError(res, err);
+    }
+} 
+
+export async function retrieveMeal(req:Request, res:Response){
+    try{
+        let id1 = (req.params.id1);
+        const doc = await db.collection(collection).doc(id1).collection(subcollection).doc(req.params.id).get();        
+        if(!doc) {
+            return res.status(404).json(Message('Comida no encontrada', `Comida con el id ${req.params.id} no encontrado`, 'warning'));               
+        }        
+        return res.status(200).json(Comida(doc.data(), doc.id));   
+    }
+    catch(err){
+        return handleError(res, err);
+    }
+}
+
+export async function updateMeal(req: Request, res: Response) {       
+    try {
+        let id1 = (req.params.id1);
+        const MealToUpdate = Comida(req.body);
+        await db.collection(collection).doc(id1).collection(subcollection).doc(req.params.id).set(MealToUpdate, {merge : true});
+        return res.status(200).json(Message('Comida actualizada', `Comida con el id ${req.params.id} fue actualizada`, 'success'));        
+    } catch (err) {
+        return handleError(res, err);
+    }
+}
+
+export async function deleteMeal(req: Request, res: Response) {       
+    try{
+        let id1 = (req.params.id1);
+        await db.collection(collection).doc(id1).collection(subcollection).doc(req.params.id).delete();
+        return res.status(200).json(Message('Comida eliminada', `Comida con el id ${req.params.id} fue eliminada correctamente`, 'success')
+        );
+    }
+    catch(err){
+        return handleError(res, err);
+    }
+};
+
+export async function listMeal(req: Request, res: Response) {       
+    try {
+        let id1 = (req.params.id1);
+        let page = parseInt(req.params.page);
+        let limit = parseInt(req.params.limit);
+        let avoid = page == 1 ? 0 : (page - 1) * limit;
+        let snapshot = await db.collection(collection).doc(id1).collection(subcollection).orderBy('servicio').offset(avoid).limit(limit).get();
+        return res.status(200).json(snapshot.docs.map(doc => Comida(doc.data(), doc.id)));        
+    } catch (err) {
+        return handleError(res, err);
+    }       
+};
+
+export async function countMeal(req: Request, res: Response) {       
+    try {
+        let id1 = (req.params.id1);
+        let snapshot = await db.collection(collection).doc(id1).collection(subcollection).get();        
+        return res.status(200).json({ numberDocs : snapshot.size });        
+    } catch (err) {
+        return handleError(res, err);
+    }
+}
+
+
+function handleError(res: Response, err: any) {
+    return res.status(500).send({ message: `${err.code} - ${err.message}` });
+}

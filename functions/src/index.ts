@@ -3,42 +3,24 @@ import * as express from 'express';
 import * as bodyParser from 'body-parser';
 import * as admin from 'firebase-admin';
 import * as cors from 'cors';
+import { routesUser, routesAcomm, routesRoom, routesService, routesMeal } from './routes';
 
 admin.initializeApp(functions.config().firebase);
 
 const db=admin.firestore();
-db.settings({ignoreUndefinedProperties:true});
+db.settings({ignoreUndefinedProperties:true,  timestampsInSnapshot: true});
 
-const main=express();
-main.use(cors());
-main.use(bodyParser.json());
-main.use(bodyParser.urlencoded({extended:false}));
-main.use('/api',require('./usuario').routes);
-main.use('/api',require('./cuarto').routes);
-/*main.use('/api',require('./reservacion').routes);
-main.use('/api',require('./habitacion').routes);
+const server=express();
 
-*/
-export interface Mensaje{
-    title:string,
-    text:string,
-    icon:string
-}
+server.use(cors({origin: true}));
+server.use(bodyParser.json());
+server.use(bodyParser.urlencoded({extended:false}));
 
-export function Message(title:string, text:string, icon: string){
-    let message :Mensaje = {
-        title: title,
-        text: text,
-        icon: icon
-    }
-    return message;
-}
+routesUser(server);
+routesRoom(server);
+routesAcomm(server);
+routesService(server);
+routesMeal(server);
 
-export const api=functions.https.onRequest(main);
+export const api=functions.https.onRequest(server);
 export{db};
-// // Start writing Firebase Functions
-// // https://firebase.google.com/docs/functions/typescript
-//
-// export const helloWorld = functions.https.onRequest((request, response) => {
-//  response.send("Hello from Firebase!");
-// });
