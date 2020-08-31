@@ -2,19 +2,12 @@ import {db} from '../index';
 import { Comida } from '../models/comida';
 import { Message } from "../models/message";
 import { Request, Response } from "express";
-import {Habitacion} from '../models/habitacion';
-
 
 const collection="alimentacion";
 
 export async function createMeal(req:Request,res:Response){
     try{
         const newMeal = Comida(req.body);
-
-        const idhabitacion=newMeal.idhabitacion;
-
-        const docAcomm=await db.collection("habitacion").doc(idhabitacion).get();
-        newMeal.habitacion=Habitacion(docAcomm.data());
         
         const MealAdded = await db.collection(collection).add(newMeal);
         return res.status(201).json(Message('Comida agregada', `Comida fue agregada con el id ${MealAdded.id}`, 'success'));
@@ -67,7 +60,7 @@ export async function listMeal(req: Request, res: Response) {
         let page = parseInt(req.params.page);
         let limit = parseInt(req.params.limit);
         let avoid = page == 1 ? 0 : (page - 1) * limit;
-        let snapshot = await db.collection(collection).orderBy('servicio').offset(avoid).limit(limit).get();
+        let snapshot = await db.collection(collection).orderBy('fecha').offset(avoid).limit(limit).get();
         return res.status(200).json(snapshot.docs.map(doc => Comida(doc.data(), doc.id)));        
     } catch (err) {
         return handleError(res, err);

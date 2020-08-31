@@ -2,23 +2,12 @@ import {db} from '../index';
 import { Habitacion } from '../models/habitacion'
 import { Message } from "../models/message";
 import { Request, Response } from "express";
-import {Usuario} from '../models/usuario';
-import {Cuarto} from '../models/cuarto';
 
 const collection="habitacion";
 
 export async function createAcommodation(req:Request,res:Response){
     try{
         const newHabitacion = Habitacion(req.body);
-
-        const idusuario=newHabitacion.idusuario;
-        const idcuarto=newHabitacion.idcuarto;
-        
-        const docUser=await db.collection("usuario").doc(idusuario).get();
-        newHabitacion.usuario=Usuario(docUser.data());
-
-        const docRoom=await db.collection("habitacion").doc(idcuarto).get();
-        newHabitacion.cuarto=Cuarto(docRoom.data());
 
         const HabitacionAdded = await db.collection(collection).add(newHabitacion);
         return res.status(201).json(Message('Alojamiento agregado', `Alojamiento fue agregado con el id ${HabitacionAdded.id}`, 'success'));
@@ -68,7 +57,7 @@ export async function listAcommodation(req: Request, res: Response) {
         let page = parseInt(req.params.page);
         let limit = parseInt(req.params.limit);
         let avoid = page == 1 ? 0 : (page - 1) * limit;
-        let snapshot = await db.collection(collection).orderBy('numero_habitacion').offset(avoid).limit(limit).get();
+        let snapshot = await db.collection(collection).orderBy('num_cuarto').offset(avoid).limit(limit).get();
         return res.status(200).json(snapshot.docs.map(doc => Habitacion(doc.data(), doc.id)));        
     } catch (err) {
         return handleError(res, err);
